@@ -4,6 +4,7 @@
 
 - my own kafka playground.
 - mock kafka as test environment.
+  - to test kafka event producing, consuming.
 
 ## But how? 🫠
 
