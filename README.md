@@ -8,6 +8,6 @@
 ## But how? 🫠
 
 - Way 1. use docker as test container.
-- Way 2. create tcp listener to mock kafka.
+- Way 2. create tcp listener to mock kafka cluster.
 
 So. Let's do it
