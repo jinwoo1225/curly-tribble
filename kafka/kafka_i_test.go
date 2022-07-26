@@ -39,7 +39,14 @@ func TestKafkaProducingAndConsuming(t *testing.T) {
 	topic := "test_topic"
 	testMessage := "kafka TESTING"
 
-	p.Produce(ctx, topic, []byte(testMessage), now)
+	errChan := p.Produce(ctx, topic, []byte(testMessage), now)
+
+	go func() {
+		produceErr := <-errChan
+		if produceErr != nil {
+			t.Error(produceErr)
+		}
+	}()
 
 	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
 	defer cancel()

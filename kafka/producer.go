@@ -47,19 +47,23 @@ func NewDefaultProducer(option ProducerOption) (*DefaultProducer, error) {
 	return &DefaultProducer{client: client}, nil
 }
 
-func (d *DefaultProducer) Produce(ctx context.Context, topic string, data []byte, ts time.Time) {
+func (d *DefaultProducer) Produce(ctx context.Context, topic string, data []byte, ts time.Time) <-chan error {
 	record := &kgo.Record{
 		Topic:     topic,
 		Timestamp: ts,
 		Value:     data,
 	}
+	errChan := make(chan error)
+
 	d.client.Produce(ctx, record, func(record *kgo.Record, err error) {
 		if err != nil {
 			zap.L().Sugar().Error(err)
 		} else {
 			zap.L().Sugar().Debug("record sent : ", string(record.Value))
 		}
+		errChan <- err
 	})
+	return errChan
 }
 
 func (d *DefaultProducer) Close() {
