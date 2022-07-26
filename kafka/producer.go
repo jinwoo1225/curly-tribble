@@ -5,7 +5,6 @@ import (
 	"time"
 
 	"github.com/twmb/franz-go/pkg/kgo"
-	"github.com/twmb/franz-go/pkg/kversion"
 	"go.uber.org/zap"
 )
 
@@ -24,13 +23,10 @@ type DefaultProducer struct {
 func NewDefaultProducer(option ProducerOption) (*DefaultProducer, error) {
 	zap.L().Sugar().Debug(option.brokers)
 	options := []kgo.Opt{
-
 		kgo.SeedBrokers(option.brokers...),
 		kgo.ProduceRequestTimeout(option.timeout),
 		kgo.RecordDeliveryTimeout(option.interval),
 		kgo.RecordRetries(option.retry),
-		kgo.RecordPartitioner(kgo.RoundRobinPartitioner()),
-		kgo.MinVersions(kversion.V2_2_0()),
 	}
 
 	if option.autoCreateTopic {
